@@ -1,0 +1,137 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Rentals Next Day (Admin)</title>
+    <style>
+        .home-content {
+            background-image: url("{% static 'image/bg1.jpg' %}"); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+        body {
+            
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+.container {
+text-align: center;
+font-size: small;
+margin-bottom: 5%;
+}
+
+        h2 {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            margin: 0 auto;
+            width: 60%;
+            border-collapse: collapse;
+          
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+        td{
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #333;
+        }
+
+ 
+
+        p {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+        button{
+            padding: 5px;
+            border-radius: 5px;
+            color: red;
+            font-weight: bold;
+            background-color: rgba(54, 142, 54, 0.579);
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 600px) {
+            h2,th, td {
+                font-size:smaller;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Overdue Rentals</h2>
+<div class="container" style="overflow-x: auto;">
+
+    {% if user_rentals_next_day %}
+        <table>
+            <thead>
+                <tr>
+                    <th> Id</th>
+                    <th>User</th>
+                    <th>Book</th>
+                    <th>Rental Date</th>
+                    <th>Return Date</th>
+                    <th>fine</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rental in user_rentals_next_day %}
+                    <tr>
+                        <td>{{ rental.id }}</td>
+                        <td>{{ rental.user.username }}</td>
+                        <td>{{ rental.book.name }}</td>
+                        <td>{{ rental.rental_date }}</td>
+                        <td>{{ rental.return_date }}</td>
+                        <td>
+                            {% if rental.fine_amount == 0 %}
+                            
+                                <a href="{% url 'overdue_inform' rental.id %}"><button type="submit" class="btn-success">Charge Fine</button></a>
+                            {% else %}
+                                ₹{{ rental.fine_amount }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No rentals found for the next day.</p>
+    {% endif %}
+</div>
+
+</body>
+
+</html>
+
+{% endblock %}

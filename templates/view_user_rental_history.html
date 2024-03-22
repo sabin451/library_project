@@ -1,0 +1,237 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>view_user_rental_history</title>
+    <link rel="stylesheet" href="{% static 'path/to/styles.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .filter {
+            text-align: right;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            text-align: center;
+            background-color: rgba(174, 124, 39, 0.786);
+        }
+        td{
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 15px 5px;
+            text-align: center;
+            font-size:medium;
+        }
+
+        .lost {
+            background-color: #ffdddd;
+        }
+
+        .not-lost {
+            background-color: #d9ffd9;
+        }
+
+        .returned {
+            background-color: #cccccc;
+        }
+        .overdue{
+            background-color: rgba(255, 2, 2, 0.698);
+        }
+        .fine {
+            color: red;
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin: 40px 0px;
+            border: none;
+        }
+
+        .button {
+            background-color: #4CAF50; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            text-align: center; 
+            text-decoration: none;
+            display: inline-block; 
+            font-size: 16px;
+            cursor: pointer; 
+            border-radius: 5px; 
+        }
+
+        .button:disabled {
+            background-color: #5c5c5c;
+            cursor: not-allowed; 
+        }
+
+        .report-button {
+            background-color: #f44336; 
+        }
+        .inform-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    
+        .inform-button:disabled {
+            background-color: #5c5c5c;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h2>Rental History for {{ user.user.username }}</h2>
+    
+    <div class="filter">
+        <label for="filter">Filter:</label>
+        <select id="filter" onchange="filterRentals(this.value)">
+            <option value="all">All Rentals</option>
+            <option value="active">Active Rentals</option>
+            <option value="returned">Returned Rentals</option>
+            <option value="lost">Lost Rentals</option>
+            <option value="overdue">Overdue Rentals</option>
+        </select>
+    </div>
+
+    <div class="container" style="overflow-x: auto;">
+        <table>
+            <tr>
+                <th>Retal ID</th>
+                <th>Book</th>
+                <th>Rental Date</th>
+                <th>Return Date</th>
+                <th>Is Lost</th>
+                <th>Fine Amount</th>
+                <th>Rental Status</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for rental in rentals reversed  %}
+            <tr class="{% if rental.is_lost %}lost{% elif rental.returned_date %}returned{% elif rental.return_date|date:'m-d-y' < now|date:'m-d-y' and not rental.returned_date %}overdue{% else %}not-lost{% endif %}">
+                
+                <td>{{ rental.id }}</td>
+                <td>{{ rental.book.name }}</td>
+                <td>{{ rental.rental_date }}</td>
+                <td>{{ rental.return_date }}</td>
+                <td>{{ rental.is_lost }}</td>
+                <td>${{ rental.fine_amount }}</td>
+                <td>
+                    {% if rental.is_lost %}
+                        Reported Lost
+                    {% elif rental.returned_date %}
+                        Returned
+                    {% elif rental.return_date|date:'m-d-y' < now|date:'m-d-y' and not rental.returned_date %}
+                        Overdue
+                    {% else %}
+                        Active
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rental.return_date|date:'m-d-y' < now|date:'m-d-y' and not rental.returned_date and rental.fine_amount == 0 %}
+                        <form method="POST" action="{% url 'overdue_inform' rental.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="inform-button">Fine</button>
+                        </form>
+                    {% else %}
+                        <!-- If fine amount is not zero or rental status is not overdue, disable the button -->
+                        <button type="button" class="inform-button" disabled>Fine</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+        function overdueInform(rentalId) {
+            // Placeholder for your logic to handle overdue_inform
+            var confirmation = confirm('Are you sure you want to inform about overdue rental ID: ' + rentalId + '?');
+            if (confirmation) {
+                // Perform AJAX request to handle overdue_inform logic
+                var formData = new FormData();
+                formData.append('rental_id', rentalId);
+    
+                fetch('{% url "overdue_inform" 0 %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Inform successful!');
+                        // Optionally, update the UI or take further actions
+                    } else {
+                        alert('Inform failed!');
+                        // Optionally, handle failure or display an error message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while informing about overdue rental.');
+                });
+            }
+        }
+
+
+        function filterRentals() {
+            var rows = document.querySelectorAll('tr');
+            var filter = document.getElementById('filter').value.toLowerCase();
+
+            rows.forEach(function (row, index) {
+                if (index === 0) {
+                    row.style.display = '';
+                    return;
+                }
+
+                var rentalStatus = row.cells[5].innerText.toLowerCase();
+
+                if (filter === 'all' || rentalStatus.includes(filter)) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function overdueInform(rentalId) {
+            // Placeholder for your logic to handle overdue_inform
+            alert('Inform button clicked for rental ID: ' + rentalId);
+            // You might want to replace this alert with an AJAX call to the server to trigger the overdue_inform view
+        }
+    </script>
+</body>
+</html>
+
+{% endblock %}

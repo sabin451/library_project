@@ -1,0 +1,105 @@
+{% extends 'nav_l.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+
+
+<style>
+
+.container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #9f6060;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  label {
+    margin: 10px 0;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  a {
+    text-align: center;
+    text-decoration: none;
+    color: #47b2e4;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #47b2e4;
+    color: #ff0000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #175d69;
+  }
+  
+  .link {
+    text-align: center;
+  }
+  
+</style>
+
+
+
+    
+{% for message in messages %}
+    <div class="{% if message.tags %}alert alert-{{ message.tags }}{% endif %}" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
+        <div class="container">
+            <h1>Welcome</h1>
+            <form method="post">
+              {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br>
+        
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+                
+                <a href="#">Forgot Password?</a>
+                <button type="submit">Login</button>
+                <div class="link">Not a member? <a href="{% url 'register' %}">Sigup here</a></div>
+                
+            </form>
+        </div>
+
+
+{% endblock %}

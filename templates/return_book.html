@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Book</title>
+</head>
+<body>
+    <h2>Return Book</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to return '{{ rental.book.name }}'?</p>
+        <input type="submit" value="Return Book">
+    </form>
+
+    <br><br><br>
+    <a href="{% url 'home_u' %}" >Back to home</a>
+</body>
+</html>

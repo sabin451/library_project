@@ -1,0 +1,14 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+<script src="https://kit.fontawesome.com/76ed4bac95.js" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    window.onload = function() {
+        swal("Welcome back, {{ user.username }}!", "You are logged in.", "success");
+        }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}
+

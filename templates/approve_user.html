@@ -1,0 +1,25 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approve User</title>
+</head>
+<body>
+    <h2>Approve User</h2>
+
+    <p>Approve the registration for user: {{ user.user.username }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Approve</button>
+    </form>
+</body>
+</html>
+
+{% endblock %}

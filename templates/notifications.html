@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Overdue Rental Notifications</title>
+</head>
+<body>
+    <h2>Overdue Rental Notifications</h2>
+
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Book Name</th>
+            <th>Rental Date</th>
+            <th>Return Date</th>
+        </tr>
+        {% for rental in overdue_rentals %}
+        <tr>
+            <td>{{ rental.user.username }}</td>
+            <td>{{ rental.book.name }}</td>
+            <td>{{ rental.rental_date }}</td>
+            <td>{{ rental.return_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

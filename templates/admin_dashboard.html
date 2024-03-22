@@ -1,0 +1,137 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: var(--green);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--black);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        button.approve {
+            background-color: #28a745;
+            color: #fff;
+        }
+        button.disapprove {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+
+        @media only screen and (max-width: 600px) {
+            table {
+                margin: 0 auto;
+                }
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>User Approval Dashboard</h2>
+<div style="overflow-x: auto;">
+    <table>
+
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Approval Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user_profile in users_to_approve %}
+                <tr>
+                    <td>{{ user_profile.username }}</td>
+                    <td>{{ user_profile.email }}</td>
+                    <td>{% if user_profile.is_approved %}Approved{% else %}Not Approved{% endif %}</td>
+                    <td>
+                        {% if user_profile.is_approved %}
+                            <form method="post" action="{% url 'disapprove_user' user_profile.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="disapprove">Disapprove</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'approve_user' user_profile.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="approve">Approve</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+
+</html>
+
+{% endblock %}

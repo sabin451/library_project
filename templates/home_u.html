@@ -1,0 +1,564 @@
+
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚Luminia</title>
+    
+<style>
+  .header-2.active {
+    position: fixed;
+    top: 0;
+    left: 78px;
+    right: 0;
+    z-index: 10;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+
+
+  <script>
+    {% for message in messages %}
+        Swal.fire({
+            icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+            title: '{{ message|escapejs }}',
+            showConfirmButton: true,
+            confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+        });
+    {% endfor %}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <header class="header">
+    <div class="header-2">
+      <nav class="navbar">
+        
+        <a href="#home">home</a>
+        <a href="#featured">featured</a>
+        <a href="#arrivals">category</a>
+        <a href="#reviews">reviews</a>
+        <a href="#feedback">feedback</a>
+    </nav>
+    </div>
+</header>
+
+<div class="login-form-container">
+
+    <div id="close-login-btn" class="fas fa-times"></div>
+
+    <form method="post" action="{% url 'login_view' %}">
+        {% csrf_token %}
+          <label for="username">Username:</label>
+          <input type="text" id="username" class="box" name="username" required><br>
+  
+          <label for="password">Password:</label>
+          <input type="password" id="password" class="box" name="password" required><br>
+          
+          <a href="#">Forgot Password?</a>
+          <button type="submit"   class="btn">Login</button>
+          <div class="link">Not a member? <a href="{% url 'register' %}">Sigup here</a></div>
+          
+      </form>
+
+
+</div>
+
+<!-- home -->
+
+<section class="home" id="home">
+
+    <div class="row">
+
+        <div class="content">
+            <h3>Best Sellers</h3>
+            <p>
+📚 Dive into a world of literary wonders with Luminia's spectacular book deals! Calling all book lovers – it's time to indulge your passion for reading with our exclusive offers. 🌟</p>
+            <a href="#" class="btn">shop now</a>
+        </div>
+
+        <div class="swiper books-slider">
+<!-- Swiper Slider -->
+<div class="swiper-wrapper">
+    {% for book in books %}
+        <a href="{% url 'rent_book' book.id %}" class="swiper-slide">
+            <img src="{{ book.image.url }}" alt="{{ book.name }}">
+            <div class="book-info">
+            </div>
+        </a>
+    {% endfor %}
+</div>
+<!-- End Swiper Slider -->
+
+            <img src="{% static 'image/stand.jpg' %}" class="stand">
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- home -->
+
+<!-- icons -->
+
+<section class="icons-container">
+
+    <div class="icons">
+        <i class="fas fa-shipping-fast"></i>
+        <div class="content">
+            <h3>safe shipping</h3>
+            <p>2000+ done</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-lock"></i>
+        <div class="content">
+            <h3>secure payment</h3>
+            <p>100 secure payment</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-redo-alt"></i>
+        <div class="content">
+            <h3>easy returns</h3>
+            <p>10 days returns</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-headset"></i>
+        <div class="content">
+            <h3>24/7 support</h3>
+            <p>call us anytime</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- icons -->
+
+<!-- featured -->
+
+<section class="featured" id="featured">
+
+    <h1 class="heading"> <span>featured books</span> </h1>
+
+    <div class="swiper featured-slider">
+
+        <div class="swiper-wrapper">
+            {% for book in books %}
+                <div class="swiper-slide box">
+                    <div class="icons">
+                        <a href="#" class="fas fa-search"></a>
+                        <a href="{% url 'book_detail' book.id %}" class="fas fa-eye"></a>
+                    </div>
+                    <div class="image">
+                        <a href="{% url 'rent_book' book.id %}">
+                            <img src="{{ book.image.url }}" alt="{{ book.name }}">
+                        </a>
+                    </div>
+                    <div class="content">
+                        <h3>{{ book.name }}</h3>
+                        <div class="price">₹{{ book.price }} </div>
+                        <a href="{% url 'add_to_cart' book.id %}" class="btn">add to cart</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+    </div>
+
+</section>
+
+<!-- featured -->
+
+<!-- newsletter-->
+
+<section class="newsletter">
+
+    <form action="">
+        <h3>subscribe for latest updates</h3>
+        <input type="email" name="" placeholder="enter your email" id="" class="box">
+        <input type="submit" value="subscribe" class="btn">
+    </form>
+
+</section>
+
+<!-- newsletter -->
+
+<!-- category -->
+
+<section class="arrivals" id="arrivals">
+
+  <h1 class="heading"> <span>Category</span> </h1>
+
+  <div class="swiper arrivals-slider">
+
+      <div class="swiper-wrapper">
+
+          {% for category in categories %}
+              <a href="#" class="swiper-slide box">
+                  <div class="content">
+                      <h3>{{ category.name }}</h3>
+                  </div>
+              </a>
+          {% endfor %}
+
+      </div>
+      <div class="swiper-wrapper">
+
+          {% for category in categories %}
+              <a href="#" class="swiper-slide box">
+                  <div class="content">
+                      <h3>{{ category.name }}</h3>
+                  </div>
+              </a>
+          {% endfor %}
+
+      </div>
+
+  </div>
+
+</section>
+
+
+
+
+
+
+<!-- category -->
+
+<!-- deal -->
+
+<section class="deal">
+
+    <div class="content">
+        <h3>deal of the day</h3>
+        <h1>upto 50% off</h1>
+        <p>Checkout before this deal expires at midnight.</p>
+        <a href="#" class="btn">shop now</a>
+    </div>
+
+    <div class="image">
+        <img src="{% static 'image/deal-img.jpg' %}" alt="">
+    </div>
+
+</section>
+
+<!-- deal -->
+
+<!-- reviews -->
+
+<section class="reviews" id="reviews">
+
+    <h1 class="heading"> <span>client's reviews</span> </h1>
+
+    <div class="swiper reviews-slider">
+
+      <div class="swiper-wrapper">
+
+        <div class="swiper-slide box">
+        <img src="/static/image/pic-1.png" alt="">
+            <h3>ujjwal </h3>
+            <p>First of all it customer service is excellent. We get all author book for Mumbai University. People should try here affordable and best price.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+
+        <div class="swiper-slide box">
+            <img src="/static/image/pic-2.png" alt="">
+            <h3>marry </h3>
+            <p>Best book store almost all books are available for prepartion of exam related or other books are available on reaonable price also.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+
+        <div class="swiper-slide box">
+            <img src="/static/image/pic-3.png" alt="">
+            <h3>Raghu </h3>
+            <p>Customer Service is good. Greetings to customer and making the required Books available to Customers is very good.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+        <div class="swiper-slide box">
+            <img src="/static/image/pic-4.png" alt="">
+            <h3>Pooja </h3>
+            <p>This book centre have large amount of a books. The engineering study material all semester books are available.then the peacefull and nice book centre.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+
+        <div class="swiper-slide box">
+            <img src="/static/image/pic-5.png" alt="">
+            <h3>Abhinav </h3>
+            <p>I migrated to the online platform on Just books because I was finding it difficult to go to their libraries before closing time.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+
+        <div class="swiper-slide box">
+            <img src="/static/image/pic-6.png" alt="">
+            <h3>Sidddhi </h3>
+            <p>I love the product because it is very easy to find. The book are in really organized manner you can easily find the book you want.</p>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+</section>
+
+<!-- reviews -->
+
+<!-- feedback -->
+
+<section class="blogs" id="feedback">
+
+    <h1 class="heading"> <span>feedback</span> </h1>
+
+    <section class="newsletter">
+
+      <form action="">
+        <h3>give your feedback here...</h3>
+        <textarea name="" id="" cols="30" rows="10" placeholder="enter your feedback" class="box" ></textarea> 
+        <a href="#" class="btn">Send</a>
+        </a>
+    </form>
+
+    </section>
+</section>
+
+<!-- loader  -->
+
+<div class="loader-container">
+  <h1>📚LUMINIA</h1>
+  <br>
+  <img src="/static/image/loader-img.gif" alt="">
+</div>
+
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+<script>
+
+
+
+    searchForm = document.querySelector('.search-form');
+
+document.querySelector('#search-btn').onclick = () =>{
+  searchForm.classList.toggle('active');
+}
+
+let loginForm = document.querySelector('.login-form-container');
+
+document.querySelector('#login-btn').onclick = () =>{
+  loginForm.classList.toggle('active');
+}
+
+document.querySelector('#close-login-btn').onclick = () =>{
+  loginForm.classList.remove('active');
+}
+
+window.onscroll = () =>{
+
+  searchForm.classList.remove('active');
+
+  if(window.scrollY > 80){
+    document.querySelector('.header .header-2').classList.add('active');
+  }else{
+    document.querySelector('.header .header-2').classList.remove('active');
+  }
+
+}
+
+window.onload = () =>{
+
+  if(window.scrollY > 80){
+    document.querySelector('.header .header-2').classList.add('active');
+  }else{
+    document.querySelector('.header .header-2').classList.remove('active');
+  }
+
+  fadeOut();
+
+}
+
+function loader(){
+  document.querySelector('.loader-container').classList.add('active');
+}
+/* -----------  setTimeout(loader, 4000);-----------------------------------------------------------------------------------------------loader---------------------------------------------------------*/
+
+function fadeOut(){
+  setTimeout(loader, 4000);
+}
+
+
+
+
+
+var swiper = new Swiper(".books-slider", {
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 1000,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".featured-slider", {
+  spaceBetween: 10,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    450: {
+      slidesPerView: 2,
+    },
+    768: {
+      slidesPerView: 3,
+    },
+    1024: {
+      slidesPerView: 4,
+    },
+  },
+});
+
+var swiper = new Swiper(".arrivals-slider", {
+  spaceBetween: 10,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".reviews-slider", {
+  spaceBetween: 10,
+  grabCursor:true,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".blogs-slider", {
+  spaceBetween: 10,
+  grabCursor:true,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+</script>
+
+
+</body>
+</html>
+
+{% endblock %}

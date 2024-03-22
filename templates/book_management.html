@@ -1,0 +1,139 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: var(--green);
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        th, td {
+            border: 1px solid var(--black);
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto; 
+            display: block; 
+            margin: 0 auto; 
+        }
+
+
+        .actions {
+            text-align: center;
+        }
+
+
+        .actions a {
+            display: block;
+            margin: 5px auto;
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+
+        .edit-btn{
+            background-color: lightgreen;
+        }
+        .delete-btn{
+            background-color: lightcoral;
+        }
+        .edit-btn:hover{
+            color: lightgreen;
+            background-color: #333;
+        }
+        .delete-btn:hover{
+            color: lightcoral;
+            background-color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            table {
+                width: 90%;
+                }
+                
+            th, td {
+                font-size: 14px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Books</h2>
+<div style="overflow-x:auto;">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Book Name</th>
+                <th>Categories</th> 
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{% if book.image %}<img src="{{ book.image.url }}" alt="{{ book.name }} Image">{% endif %}</td>
+                    <td>{{ book.name }}</td>
+                    <td>
+                        {% for category in book.categories.all %}
+                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.publisher }}</td>
+                    <td>₹{{ book.price }}</td>
+                    <td>{{ book.stock }}</td>
+                    <td class="actions">
+                        <a href="{% url 'edit_book' book.id %}" class="edit-btn">Edit</a>
+                        <a href="{% url 'delete_book' book.id %}" class="delete-btn">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+{% endblock %}

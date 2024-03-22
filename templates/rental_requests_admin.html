@@ -1,0 +1,69 @@
+{% extends 'nav_a.html' %}
+
+{% block content %}
+  <h2>Rental Requests</h2>
+
+<div class="box">
+  {% if rental_requests %}
+    <table class="rental-requests-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Book</th>
+          <th>Rental Date</th>
+          <th>Return Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rental in rental_requests %}
+          <tr>
+            <td>{{ rental.user.username }}</td>
+            <td>{{ rental.book.name }}</td>
+            <td>{{ rental.rental_date }}</td>
+            <td>{{ rental.return_date }}</td>
+            <td>
+              <a class="approve-btn" href="{% url 'approve_rental_request' rental.id %}">Approve</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No rental requests available.</p>
+  {% endif %}
+</div>
+  
+  <style>
+    .box{
+      overflow-x: auto;
+    }
+    .rental-requests-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .rental-requests-table th, .rental-requests-table td {
+      border: 1px solid #dddddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .rental-requests-table th {
+      background-color: #f2f2f2;
+    }
+
+    .approve-btn {
+      color: #fff;
+      background-color: #4CAF50;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 3px;
+    }
+
+    .approve-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+{% endblock %}

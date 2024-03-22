@@ -1,0 +1,97 @@
+{% extends 'nav_a.html' %}
+
+{% block content %}
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            .home-content {
+                background-image: url("{% static 'image/bg2.jpg' %}"); 
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+
+            }
+            
+            body {
+                font-family: 'Poppins', sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color: #f7f7f7;
+                overflow: hidden;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 7% auto;
+                background-color: #ffffffcb;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+
+            h2 {
+                color: var(--green);
+                text-align: center;
+            }
+
+            .form-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-label {
+                margin-bottom: 10px;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
+
+            .form-button {
+                padding: 10px;
+                background-color: var(--green);
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .form-button:hover {
+                background-color: var(--dark-color);
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    max-width: 90%;
+                    margin: 20px auto;
+                    overflow-x: auto;
+                }}
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2>Add Category</h2>
+            <form method="post" action="{% url 'add_category' %}" class="form-container">
+                {% csrf_token %}
+                <label for="category_name" class="form-label">Category Name:</label>
+                <input type="text" id="category_name" name="category_name" required class="form-input">
+                <button type="submit" class="form-button">Add Category</button>
+            </form>
+
+ 
+        </div>
+    </body>
+    </html>
+{% endblock %}

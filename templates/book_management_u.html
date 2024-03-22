@@ -1,0 +1,135 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<body>
+
+    <script>
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+                title: '{{ message|escapejs }}',
+                showConfirmButton: true,
+                confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+            });
+        {% endfor %}
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <h2>Book Management</h2>
+
+    {% for category in categories %}
+        <h3 class="category-header">{{ category.name }}</h3>
+        <div class="book-cards">
+            {% if category.book_set.all %}
+                {% for book in category.book_set.all %}
+                    <div class="card">
+                        <div class="book-details"></div>
+                        
+                        <div class="book-name">
+
+                            <b>{{ book.name }}</b>
+
+                        </div>
+                        <div class="book-image">
+                            {% if book.image %}
+                                <img src="{{ book.image.url }}" alt="{{ book.name }}" class="book-image">
+                            {% else %}
+                                <p>No Image Available</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="book-price">
+                            <p>₹{{ book.price }}</p>
+                        </div>
+                        
+                        <div class="book-stock">
+                            <p><strong>Stock:</strong> {{ book.stock }}</p>
+
+                        </div>
+                        <div class="actions">
+                            <a href="{% url 'rent_book' book.id %}">Rent It</a>
+                            <a href="{% url 'add_to_cart' book.id %}">Add to Cart</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No books in this category.</p>
+            {% endif %}
+        </div>
+        <hr class="category-separator">
+    {% endfor %}
+</body>
+
+<style>
+    .book-cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px;
+        width: 250px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+    }
+
+    .book-details {
+        flex: 1; 
+    }
+
+    .book-name {
+        font-weight: bold;
+        color: rgb(174, 124, 39);
+        background-color: #1d1b31;
+        border-radius: 5px;
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px; 
+        margin-bottom: 8px; 
+    }
+
+    .book-image {
+        max-width: 100%;
+        height: 200px;
+        margin-bottom: 8px;
+    }
+
+  
+
+    .actions a {
+        display: block;
+        margin-bottom: 0px;
+        margin-top: 8px;
+        text-decoration: none;
+        padding: 8px;
+        background-color: #1d1b31;
+        color: #fff;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .category-header {
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+        text-decoration: underline;
+        color: rgb(174, 124, 39);
+    }
+
+    .category-separator {
+        border: none;
+        border-top: 5px solid #1d1b31;
+        margin-bottom: 24px;
+    }
+</style>
+
+{% endblock %}

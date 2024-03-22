@@ -1,0 +1,137 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Books</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: var(--green);
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        th, td {
+            border: 1px solid var(--black);
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto; 
+            display: block; 
+            margin: 0 auto; 
+        }
+
+
+        .actions {
+            text-align: center;
+        }
+
+
+        .actions a {
+            display: block;
+            margin: 5px auto;
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+
+        .edit-btn{
+            background-color: lightgreen;
+        }
+        .delete-btn{
+            background-color: lightcoral;
+        }
+        .edit-btn:hover{
+            color: lightgreen;
+            background-color: #333;
+        }
+        .delete-btn:hover{
+            color: lightcoral;
+            background-color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            table {
+                width: 90%;
+                }
+                
+            th, td {
+                font-size: 14px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    
+        <form method="get">
+            <input type="text" name="query" placeholder="Search for books" value="{{ request.GET.query }}" hidden>
+            <input type="submit" value="Search" hidden>
+        </form>
+    
+        <h3>Search Results:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <a href="{% url 'book_detail' book.id %}">
+                
+                    <tr>
+                        
+                        <td><a href="{% url 'book_detail' book.id %}"><img src="{{ book.image.url }}" alt="{{ book.name }} Image" style="max-width: 100px; max-height: 100px;"></a></td>
+
+                        <td><a href="{% url 'book_detail' book.id %}">{{ book.name }}</a></td>
+                        <td>{{ book.author }}</td>
+                        <td>₹{{ book.price }}</td>
+                    </tr>
+                </a>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        
+    </div>
+</body>
+</html>
+
+
+{% endblock %}

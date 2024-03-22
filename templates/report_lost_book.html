@@ -1,0 +1,38 @@
+
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<h2>Report Lost Book</h2>
+
+<p>Rental Details:</p>
+
+<table>
+    <tr>
+        <th>User</th>
+        <td>{{ rental.user.username }}</td>
+    </tr>
+    <tr>
+        <th>Book</th>
+        <td>
+            <img src="{{ rental.book.image.url }}" alt="{{ rental.book.name }}" width="50" height="50">
+            {{ rental.book.name }}
+        </td>
+    </tr>
+    <tr>
+        <th>Rental Date</th>
+        <td>{{ rental.rental_date }}</td>
+    </tr>
+    <tr>
+        <th>Return Date</th>
+        <td>{{ rental.return_date }}</td>
+    </tr>
+</table>
+
+<form method="post" action="{% url 'report_lost_book' rental.id %}">
+    {% csrf_token %}
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}

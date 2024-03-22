@@ -1,0 +1,86 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Rentals Next Day</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: rgb(221, 37, 37);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgb(174, 124, 39);
+            color: white;
+        }
+
+        /* Add media query for smaller screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Rentals with due for tomorrow</h2>
+
+        {% if user_rentals_next_day %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Return Date</th>
+                        <th>Return</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rental in user_rentals_next_day %}
+                        <tr>
+                            <td>{{ rental.book.name }}</td>
+                            <td>{{ rental.return_date }}</td>
+                            <td><a href="{% url 'rental_history' %}">Return Book</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No rentals with due for tomorrow.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+{% endblock %}

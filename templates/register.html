@@ -1,0 +1,208 @@
+{% extends 'nav_l.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <style>
+
+body {
+    background-image: url("{% static 'image/bg1.jpg' %}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    font-size: 14px;
+
+}
+
+.container {
+    margin: 2% auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size:32px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: rgb(174, 124, 39);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+#generate_password{
+    width: 60%;
+}
+
+button:hover {
+    background-color: #ae7c27;
+}
+
+.link {
+    text-align: center;
+    margin-top: 15px;
+    color: #555;
+}
+
+.link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.link a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Registration</h1>
+        <br>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            
+
+
+            <div class="form-group">
+                <label for="contact_number">Contact Number:</label>
+                <input type="text" id="contact_number" name="contact_number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_picture">Profile Picture:</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+            </div>
+
+
+            <div class="form-group">
+                <button type="button" id="generate_password">Generate Random Password</button>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required disabled>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="show_password">Show Password:</label>
+                <input type="checkbox" id="show_password" onchange="togglePasswordVisibility()">
+            </div>
+
+
+
+            <div class="form-group">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+
+        <div class="link">Already a member? <a href="{% url 'login' %}">Sign in here</a></div>
+    </div>
+
+    <script>
+        function generateRandomPassword() {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let password = "";
+            for (let i = 0; i < 8; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                password += characters.charAt(randomIndex);
+            }
+            document.getElementById("password").value = password;
+            document.getElementById("confirm_password").value = password;
+        }
+
+        document.getElementById("generate_password").addEventListener("click", generateRandomPassword);
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById("password");
+            const confirmInput = document.getElementById("confirm_password");
+            const checkbox = document.getElementById("show_password");
+    
+            if (checkbox.checked) {
+                passwordInput.type = "text";
+                confirmInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+                confirmInput.type = "password";
+            }
+        }
+    </script>
+    <script>
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+                title: '{{ message|escapejs }}',
+                showConfirmButton: true,
+                confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+            });
+        {% endfor %}
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
+
+{% endblock %}

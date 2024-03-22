@@ -1,0 +1,507 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>📚Luminia</title>
+    <script src="https://kit.fontawesome.com/76ed4bac95.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-rzJbe6FsXzL2OHK5SvLvlN/+DOrQDO0KMq9g3i6jppe1dTCiQ5BN/gB6D7UvqFCY" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="/static/css/nav_a.css">
+<style>
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+          margin-right: 20px; 
+      }
+
+      .bell-icon {
+          font-size: 24px; 
+          cursor: pointer;
+      }
+
+      .notification-icon {
+          position: absolute;
+          top: 0;
+          right: -10px;
+          background-color: red; 
+          color: white;
+          border-radius: 50%;
+          padding: 0px 5px;
+          font-size: 12px;
+      }
+
+      .dropdown-content {
+        width:250px;
+
+          display: none;
+          position: absolute;
+          background-color: #f1f1f1;
+          min-width: 200px;
+          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+          z-index: 1;
+          border-radius: 5px; 
+          overflow: hidden; 
+          right: 0px;
+      }
+
+      .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          white-space: nowrap; 
+          position: relative;
+      }
+
+      .notification-count {
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          transform: translate(50%, -50%);
+          background-color: red; 
+          color: white;
+          border-radius: 50%;
+          padding: 0px 6px;
+          font-size: 12px;
+      }
+
+      .dropdown-content a:hover {
+          background-color: #f1f1f1;
+      }
+
+      .dropdown:hover .dropdown-content {
+          display: block;
+      }
+
+</style>
+
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="sidebar close">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plu'>📚</i>
+      <span class="logo_name">Hi Admin</span>
+    </div>
+    <ul class="nav-links">
+      <i class='bx bx-menu' ></i>
+      <li>
+        <a href="{% url 'home_a' %}">
+          <i class='bx bx-grid-alt' ></i>
+          <span class="link_name">Home</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="{% url 'home_a' %}">Home</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-collection' ></i>
+            <span class="link_name">Categories</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Categories</a></li>
+          <li><a href="{% url 'categories' %}">Categories </a></li>
+          <li><a href="{% url 'add_category' %}">Add Category </a></li>
+
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-book-alt' ></i>
+            <span class="link_name">Books</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Books</a></li>
+          <li><a href="{% url 'book_management' %}">All Books</a></li>
+          <li><a href="{% url 'add_book' %}">Add Book</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bxs-user-detail'></i>
+            <span class="link_name">Users</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Users</a></li>
+          <li><a href="{% url 'view_users' %}">View</a></li>
+          <li><a href="{% url 'admin_dashboard' %}">Approve & Disapprove</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='fa fa-clock-o'></i>
+            <span class="link_name">Requests</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Requests</a></li>
+          <li><a href="{% url 'rental_requests_admin' %}">rental Requests</a></li>
+          <li><a href="{% url 'return_requests_admin' %}">return Requests</a></li>
+        </ul>
+      </li>
+
+      <li>
+    <div class="profile-details">
+      <div class="profile-content">
+        <img src="/static/image/admin.jpg" alt="profileImg">
+      </div>
+      <div class="name-job">
+        <div class="profile_name">Admin</div>
+        <div class="job">Web Desginer</div>
+      </div>
+      <a href="{% url 'logout' %}"><i class='bx bx-log-out' ></i></a>
+    </div>
+  </li>
+</ul>
+  </div>
+  <section class="home-section">
+    <div class="home-content">
+      <span class="text">
+        <header class="header">
+          <div class="header-1">
+              <a href="#" class="logo"> 📚Luminia </a>      
+              <form action="" class="search-form">
+                  <input type="search" name="" placeholder="search here..." id="search-box">
+                  <label for="search-box" class="fas fa-search"></label>
+              </form>
+      
+              <div class="icons">
+                  <div id="search-btn" class="fas fa-search"></div>
+
+
+    <div class="dropdown">
+      <div class="bell-icon" id="bell-btn">
+          <i class="fa fa-bell"></i>
+
+          <!-- with -->
+          {% with total_notifications=total_unapproved_users|add:total_rental_dues %}
+
+          <span class="notification-icon">{{ total_notifications }}</span>
+      {% endwith %}
+      </div>
+      <div class="dropdown-content" id="bell-dropdown">
+          <a href="{% url 'unapproved_users' %}">Unapproved
+              <span class="notification-count">{{total_unapproved_users}}</span>
+          </a>
+          <a href="{% url 'user_rentals_next_day_ad' %}">Rental Dues
+              <span class="notification-count">{{total_rental_dues}}</span>
+          </a>
+      </div>
+  </div>
+
+
+                  <div id="login-btn" class="fas fa-user"></div>
+              </div>     
+          </div>     
+          <div class="header-2">
+          </div>
+      </header>
+      
+
+<div class="login-form-container">
+  <div id="close-login-btn" class="fas fa-times"></div>
+</div>
+
+        
+        {% block content %}
+        {% endblock %}
+
+        <section class="footer">
+
+          <div class="box-container">
+      
+            <div class="box">
+              <h3>our locations</h3>
+              <a href="#"> <i class="fas fa-map-marker-alt"></i> India </a>
+              <a href="#"> <i class="fas fa-map-marker-alt"></i> USA </a>
+              <img src="{% static 'image/worldmap.jpg' %}" class="worldmap">
+          </div>
+      
+              <div class="box">
+                <h3>quick links</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i> home </a>
+                <a href="#"> <i class="fas fa-arrow-right"></i> featured </a>
+                <a href="#"> <i class="fas fa-arrow-right"></i> Category </a>
+                <a href="#"> <i class="fas fa-arrow-right"></i> reviews </a>
+                <a href="#"> <i class="fas fa-arrow-right"></i> feedback </a>
+            </div>
+      
+              <div class="box">
+                  <h3>extra links</h3>
+                  <a href="#"> <i class="fas fa-arrow-right"></i> account info </a>
+                  <a href="#"> <i class="fas fa-arrow-right"></i> ordered items </a>
+                  <a href="#"> <i class="fas fa-arrow-right"></i> privacy policy </a>
+                  <a href="#"> <i class="fas fa-arrow-right"></i> payment method </a>
+                  <a href="#"> <i class="fas fa-arrow-right"></i> our serivces </a>
+              </div>
+      
+              <div class="box">
+                <h3>contact info</h3>
+                <a href="#"> <i class="fas fa-phone"></i> 7567064752 </a>
+                <a href="#"> <i class="fas fa-envelope"></i> luminia@gmail.com </a>
+            </div>
+      
+          </div>
+      
+          <div class="share">
+            <a href="#" class="fab fa-facebook-f"></a>
+            <a href="#" class="fab fa-twitter"></a>
+            <a href="https://www.instagram.com/_akshay.k.s_/" class="fab fa-instagram"></a>
+            <a href="#" class="fab fa-linkedin"></a>
+        </div>
+      
+          <div class="credit"> created by <span> Luminia </span>copyright ©2023 all rights reserved! </div>
+      
+      </section>
+      </span>
+    </div>
+  </section>
+
+  <script>
+
+    let arrow = document.querySelectorAll(".arrow");
+    for (var i = 0; i < arrow.length; i++) {
+      arrow[i].addEventListener("click", (e)=>{
+     let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+     arrowParent.classList.toggle("showMenu");
+      });
+    }
+    
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".bx-menu");
+    console.log(sidebarBtn);
+    sidebarBtn.addEventListener("click", ()=>{
+      sidebar.classList.toggle("close");
+    });
+    
+
+searchForm = document.querySelector('.search-form');
+    
+    document.querySelector('#search-btn').onclick = () =>{
+    searchForm.classList.toggle('active');
+    }
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+let loginForm = document.querySelector('.login-form-container');
+
+document.querySelector('#login-btn').onclick = () =>{
+  loginForm.classList.toggle('active');
+}
+
+document.querySelector('#close-login-btn').onclick = () =>{
+  loginForm.classList.remove('active');
+}
+
+window.onscroll = () =>{
+
+  searchForm.classList.remove('active');
+
+  if(window.scrollY > 10){
+    document.querySelector('.header .header-1').classList.add('active');
+  }else{
+    document.querySelector('.header .header-1').classList.remove('active');
+  }
+
+}
+
+window.onload = () =>{
+
+  if(window.scrollY > 10){
+    document.querySelector('.header .header-1').classList.add('active');
+  }else{
+    document.querySelector('.header .header-1').classList.remove('active');
+  }
+
+  fadeOut();
+
+}
+
+function loader(){
+  document.querySelector('.loader-container').classList.add('active');
+}
+/* -----------  setTimeout(loader, 4000);-----------------------------------------------------------------------------------------------loader---------------------------------------------------------*/
+
+function fadeOut(){
+  setTimeout(loader, 0);
+}
+
+
+
+
+
+var swiper = new Swiper(".books-slider", {
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 1000,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".featured-slider", {
+  spaceBetween: 10,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    450: {
+      slidesPerView: 2,
+    },
+    768: {
+      slidesPerView: 3,
+    },
+    1024: {
+      slidesPerView: 4,
+    },
+  },
+});
+
+var swiper = new Swiper(".arrivals-slider", {
+  spaceBetween: 10,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".reviews-slider", {
+  spaceBetween: 10,
+  grabCursor:true,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+var swiper = new Swiper(".blogs-slider", {
+  spaceBetween: 10,
+  grabCursor:true,
+  loop:true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 9500,
+    disableOnInteraction: false,
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+  </script>
+
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let bellDropdown = document.getElementById('bell-dropdown');
+      let bellBtn = document.getElementById('bell-btn');
+  
+      bellBtn.addEventListener('click', function (event) {
+        event.stopPropagation(); 
+        bellDropdown.classList.toggle('show');
+      });
+  
+      window.addEventListener('click', function () {
+        bellDropdown.classList.remove('show');
+      });
+    });
+  </script>
+  
+  
+
+  <script>
+    {% for message in messages %}
+        Swal.fire({
+            icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+            title: '{{ message|escapejs }}',
+            showConfirmButton: true,
+            confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+        });
+    {% endfor %}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+</html>

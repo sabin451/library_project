@@ -1,0 +1,152 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <style>
+        .home-content {
+            background-image: url("{% static 'image/bg4.jpg' %}"); 
+            background-size:cover;
+            background-position:top;
+            background-repeat: no-repeat;
+          } 
+        .edit-profile-container {
+            background-color: rgba(250, 250, 250, 0.9);
+            max-width: 600px;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-picture {
+            margin-bottom: 20px;
+        }
+        
+        .profile-img {
+            max-width: 200px;
+            border-radius: 50%;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+        
+        .update-btn {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+label[for="profile_picture"] {
+    display: block;
+    max-width: 70%;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#profile_picture {
+    display: none; 
+}
+
+.profile-picture-upload {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: right;
+}
+
+.profile-picture-upload:hover {
+    background-color: #2980b9;
+}
+
+.file-name {
+    margin-top: 8px;
+    color: #555;
+}
+
+        
+    </style>
+</head>
+<body>
+    <div class="edit-profile-container">
+        <h2>Edit Profile</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="profile-picture">
+                {% if user_profile.profile_picture %}
+                    <img src="{{ user_profile.profile_picture.url }}" alt="{{ user_profile.user.username }}_img" class="profile-img">
+                {% endif %}
+            </div>
+
+            <label for="profile_picture" class="profile-picture-upload">
+                Upload New Profile Picture
+            </label>
+            <input type="file" name="profile_picture" id="profile_picture">
+            <span class="file-name" id="file-name"></span>
+            
+
+            <label for="username">Username:</label>
+            <input type="text" name="username" value="{{ user_profile.username }}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="{{ user_profile.email }}" required>
+            
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" value="{{ user_profile.first_name }}" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name" value="{{ user_profile.last_name }}" required>
+
+            <label for="contact_number">Contact Number:</label>
+            <input type="text" name="contact_number" value="{{ user_profile.contact_number }}" placeholder="Optional">
+
+            <button type="submit" class="update-btn">Update Profile</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('profile_picture').addEventListener('change', function () {
+            var fileName = this.value.split('\\').pop();
+            document.getElementById('file-name').textContent = fileName || 'No file selected';
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+                title: '{{ message|escapejs }}',
+                showConfirmButton: true,
+                confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+            });
+        {% endfor %}
+        </script>
+    
+</body>
+</html>
+
+{% endblock %}

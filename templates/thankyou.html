@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Thank You</title>
+  <style>
+    /* Updated styles for the purchase thank you page */
+    body {
+      background-image: url("{% static 'image/bg1.jpg' %}"); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .purchase-thank-you {
+      max-width: 600px;
+      margin: 5% auto;
+      padding: 20px;
+      background-color: #ffffffdb;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .thank-you-heading {
+      color: #333;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    .purchase-receipt {
+      margin-top: 20px;
+    }
+
+    .receipt-text {
+      font-size: 18px;
+      color: #555;
+    }
+
+    .purchase-details,
+    .items-purchased {
+      margin-top: 20px;
+    }
+
+    .purchase-details-heading,
+    .items-purchased-heading {
+      font-size: 22px;
+      color: #4CAF50;
+      margin-bottom: 10px;
+      border-top: #ff3300;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .total-amount {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #e44d26;
+    }
+
+    .thank-you-message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="purchase-thank-you">
+    <div class="thank-you-heading">
+      <h2>Thank You for Your Purchase!</h2>
+    </div>
+
+    <div class="purchase-receipt">
+      <p class="receipt-text">Here is your purchase receipt:</p>
+
+      <div class="purchase-details">
+        <h3 class="purchase-details-heading">Purchase Details</h3>
+        <ul>
+          <li><strong>Name:</strong> {{ purchase.user.username }}</li>
+          <li><strong>Purchase Date:</strong> {{ purchase.purchase_date }}</li>       
+        </ul>
+      </div>
+
+      <div class="items-purchased">
+        <h3 class="items-purchased-heading">Items Purchased</h3>
+        <ul>
+          {% for purchase_item in purchase.purchaseitem_set.all %}
+            <li>{{ purchase_item.book.name }} - Quantity: {{ purchase_item.quantity }} - Price: ₹{{ purchase_item.book.price|floatformat:2 }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+
+    </div>
+
+    <p class="total-amount"><strong>Total Amount:</strong> ₹{{ purchase.total_amount|floatformat:2 }}</p>(including tax and shipping)
+    <br><br>
+
+    <p class="thank-you-message">Thank you for shopping with us!</p>
+    <br>
+    <a href="{% url 'home_u' %}">Back to Home</a>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    {% for message in messages %}
+        Swal.fire({
+            icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% else %}question{% endif %}',
+            title: '{{ message|escapejs }}',
+            showConfirmButton: true,
+            confirmButtonText: '{% if message.tags == "error" %}Retry{% elif message.tags == "success" %}Done{% elif message.tags == "info" %}Ok{% elif message.tags == "warning" %}Ok{% elif message.tags == "question" %}Ok{% endif %}',
+        });
+    {% endfor %}
+    </script>
+
+</body>
+
+</html>

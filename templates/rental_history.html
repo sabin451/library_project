@@ -1,0 +1,215 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <style>
+        .filter {
+            text-align: right;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            text-align: center;
+            font-size: small; /* Adjust font size for better readability on small screens */
+        }
+
+        th {
+            background-color: rgba(174, 124, 39, 0.786);
+        }
+
+        .lost {
+            background-color: #ffdddd;
+        }
+
+        .not-lost {
+            background-color: #d9ffd9;
+        }
+
+        .returned {
+            background-color: #cccccc;
+        }
+
+        .overdue{
+            background-color: rgba(255, 2, 2, 0.698);
+        }
+
+        img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow button container to wrap to the next line on small screens */
+            gap: 10px;
+            margin: 10px 0px;
+            border: none;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px; /* Adjust padding for better spacing on small screens */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px; /* Adjust font size for better readability on small screens */
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button:disabled {
+            background-color: #5c5c5c;
+            cursor: not-allowed;
+        }
+
+        .report-button {
+            background-color: #f44336;
+        }
+    </style>
+    <script src="{% static 'path/to/rental_actions.js' %}"></script>
+</head>
+
+<body>
+    <h2>Rental History</h2>
+
+    <div class="filter">
+        <label for="filter">Filter:</label>
+        <select id="filter" onchange="filterRentals(this.value)">
+            <option value="all">All Rentals</option>
+            <option value="active">Active Rentals</option>
+            <option value="returned">Returned Rentals</option>
+            <option value="lost">Lost Rentals</option>
+            <option value="overdue">Overdue Rentals</option>
+        </select>
+    </div>
+    <div style="overflow-x: auto;">        
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Book Image</th>
+                <th>Book Name</th>
+                <th>Price</th>
+                <th>Rental Date</th>
+                <th>Due Date</th>
+                <th>Fine Amount</th>
+                <th>Rental Status</th>
+                <th>Action</th>
+            </tr>
+            {% for rental in rental_history %}
+            <tr class="{% if rental.is_lost %}lost{% elif rental.is_return_approved %}returned{% elif rental.return_date.date < now.date and not rental.returned_date %}overdue{% else %}not-lost{% endif %}">
+                <td>{{ rental.id }}</td>
+                <td><img src="{{ rental.book.image.url }}" alt="{{ rental.book.name }}"></td>
+                <td>{{ rental.book.name }}</td>
+                <td>{{ rental.book.price }}</td>
+                <td>{{ rental.rental_date }}</td>
+                <td>{{ rental.return_date }}</td>
+                <td>₹{{ rental.fine_amount|floatformat:2 }}</td>
+                <td>
+                    {% if rental.is_lost %}
+                    Reported Lost
+                    {% elif rental.returned_date %}
+                    Returned
+                    {% elif rental.return_date.date < now.date and not rental.returned_date %}
+                    Overdue
+                    {% else %}
+                    Active
+                    {% endif %}
+                </td>
+                <td class="button-container">
+                    <form action="{% url 'report_lost_book' rental.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="button report-button" {% if rental.is_lost or rental.is_return_approved or rental.returned_date %} disabled {% endif %}>Report</button>
+                    </form>
+    
+                    <form action="{% url 'return_book' rental.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="button" {% if rental.is_lost or rental.is_return_approved or rental.return_date < now.date %} disabled {% endif %}>Return</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+
+    <script>
+        function filterRentals() {
+            var rows = document.querySelectorAll('tr');
+            var filter = document.getElementById('filter').value.toLowerCase();
+
+            rows.forEach(function (row, index) {
+                if (index === 0) {
+                    row.style.display = '';
+                    return;
+                }
+
+                var rentalStatus = row.cells[7].innerText.toLowerCase();
+
+                if (filter === 'all' || rentalStatus.includes(filter)) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function returnBook(rentalId) {
+            Swal.fire({
+                title: 'Confirm Return',
+                text: 'Are you sure you want to return this book?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, return it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Returning book with ID:", rentalId);
+                }
+            });
+        }
+
+        function reportLostBook(rentalId) {
+            Swal.fire({
+                title: 'Confirm Report Lost',
+                text: 'Are you sure you want to report this book as lost?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, report it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Reporting book as lost with ID:", rentalId);
+                }
+            });
+        }
+
+
+    </script>
+
+
+</body>
+</html>
+
+{% endblock %}

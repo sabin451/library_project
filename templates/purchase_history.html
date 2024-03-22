@@ -1,0 +1,101 @@
+{% extends 'nav_u.html' %}
+
+{% block content %}
+
+<style>
+  .purchase-history {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .purchase-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .purchase-table th, .purchase-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .books-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .book-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .book-details {
+    margin-right: 20px;
+  }
+  
+  .quantity {
+    font-weight: bold;
+  }
+  
+  .book-image {
+    max-width: 50px;
+    max-height: 50px;
+    margin-left: 10px;
+  }
+  
+  .no-image {
+    font-style: italic;
+    color: #888;
+  }
+  
+  .no-history {
+    font-style: italic;
+    color: #888;
+  }
+  
+</style>
+  <div class="purchase-history">
+    <h2>Purchase History</h2>
+
+    {% if user_purchases  %}
+      <table class="purchase-table">
+        <thead>
+          <tr>
+            <th>Purchase Date</th>
+            <th>Total Amount</th>
+            <th>Books Purchased</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for purchase in user_purchases %}
+            <tr>
+              <td>{{ purchase.purchase_date }}</td>
+              <td>₹{{ purchase.total_amount|floatformat:2 }}</td>
+              <td>
+                <ul class="books-list">
+                  {% for purchase_item in purchase.purchaseitem_set.all %}
+                    <li class="book-item">
+                      <div class="book-details">
+                        <span class="quantity">{{ purchase_item.quantity }} x</span>
+                        <span class="book-name">{{ purchase_item.book.name }}</span>
+                      </div>
+                      {% if purchase_item.book.image %}
+                        <img src="{{ purchase_item.book.image.url }}" alt="{{ purchase_item.book.name }} Image" class="book-image">
+                      {% else %}
+                        <span class="no-image">No Image Available</span>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="no-history">No purchase history available.</p>
+    {% endif %}
+  </div>
+{% endblock %}

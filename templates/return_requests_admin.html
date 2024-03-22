@@ -1,0 +1,78 @@
+{% extends 'nav_a.html' %}
+
+{% block content %}
+  <h2>Return Requests</h2>
+  <div class="box">
+    {% if return_requests %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Book</th>
+            <th>Rental Date</th>
+            <th>Return Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for return_request in return_requests %}
+            <tr>
+              <td>{{ return_request.id }}</td>
+              <td>{{ return_request.user.username }}</td>
+              <td>{{ return_request.book.name }}</td>
+              <td>{{ return_request.rental_date }}</td>
+              <td>{{ return_request.return_date }}</td>
+              <td>
+                <a href="{% url 'approve_return_request' return_request.id %}" class="approve-button">Approve</a>
+              </td>
+            </tr>
+            <hr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No return requests available.</p>
+    {% endif %}
+  </div>
+
+  
+  <style>
+    .box{
+      overflow-x: auto;
+  }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .approve-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .approve-button:hover {
+      background-color: #45a049;
+    }
+
+    hr {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+{% endblock %}

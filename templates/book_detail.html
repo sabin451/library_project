@@ -1,0 +1,90 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ book.name }} - Book Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .home-content {
+            background-image: url("{% static 'image/bg7.jpg' %}"); 
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+
+        }
+        h1{
+            color:darkblue;
+            text-align: center;
+        }
+
+        .book-details-container {
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            height: 350px;
+            margin: 0 auto;
+            margin-top: 5%;
+            margin-bottom: 5%;
+            background-color: rgba(255, 255, 255, 0.718);
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        .book-image {
+            max-width: 800px;
+            max-height: 800px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        
+        .book-details {
+            
+            height: 250px;
+            flex-grow: 1;
+            text-align: left;
+        }
+        .bt {
+            background-color: #4CAF50; /* Green background color */
+            border: none; /* Remove borders */
+            color:white;
+            padding: 10px 20px; /* Add padding */
+            text-align: center; /* Center text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block;
+            font-size: 16px; /* Set font size */
+            margin: 10px; /* Add margin */
+            cursor: pointer; /* Add cursor pointer */
+            border-radius: 8px; /* Add border radius */
+        }
+        
+        .bt:hover {
+            background-color: #45a049; /* Darker green color on hover */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="book-details-container">
+        <img class="book-image" src="{{ book.image.url }}" alt="{{ book.name }} Image">
+        <div class="book-details">
+            <h1>{{ book.name }}</h1>
+            <br>
+            <p>Author: {{ book.author }}</p>
+            <p>Publisher: {{ book.publisher }}</p>
+            <p>Price: ${{ book.price }}</p>
+            <p>Stock: {{ book.stock }}</p>
+          
+            <a href="{% url 'rent_book' book.id %}" class="bt">Rent It</a>
+         
+            <a href="{% url 'add_to_cart' book.id %}" class="bt">Add to cart</a>
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock %}

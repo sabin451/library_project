@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Overdue Rental Notifications</title>
+</head>
+<body>
+    <h2>Overdue Rental Notifications</h2>
+
+    {% if overdue_rentals %}
+        <ul>
+            {% for rental in overdue_rentals %}
+                <li>
+                    <strong>User:</strong> {{ rental.user.username }},
+                    <strong>Book:</strong> {{ rental.book.name }},
+                    <strong>Return Date:</strong> {{ rental.return_date|date:"F j, Y H:i:s" }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No overdue rentals at the moment.</p>
+    {% endif %}
+</body>
+</html>

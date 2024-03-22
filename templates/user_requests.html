@@ -1,0 +1,31 @@
+{% extends 'nav_u.html' %}
+{% load static %}
+{% block content %}
+
+  <h2>Your Requests</h2>
+
+  {% if user_rental_requests %}
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Request Date</th>
+          <th>Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in user_rental_requests %}
+          <tr>
+            <td>{{ request.book.name }}</td>
+            <td>{{ request.request_date }}</td>
+            <td>{% if request.is_rental_request %}Rental{% else %}Return{% endif %}</td>
+            <td>{% if request.is_approved %}Approved{% else %}Pending{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No requests available.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Users</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: var(--green);
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--black);
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto; 
+            display: block; 
+            margin: auto;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .actions a {
+            margin-right: 5px;
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid var(--black);
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            display: inline-block; 
+            margin-bottom: 10px; 
+        }
+
+        .actions a:hover {
+            background-color: #ddd;
+        }
+
+        @media only screen and (max-width: 600px) {
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+                margin: 20px auto;
+                overflow-x: auto;
+            }}
+
+
+    </style>
+</head>
+
+<body>
+    <h2>View Users</h2>
+<div class="container">
+
+    <table>
+    
+        <tr>
+            <th>Profile Picture</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Contact Number</th>
+            <th>Rental History</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+            </td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.contact_number }}</td>
+            <td>
+                <a href="{% url 'view_user_rental_history' user.id %}">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+    </body>
+</html>
+
+{% endblock %}

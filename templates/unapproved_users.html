@@ -1,0 +1,110 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Unapproved Users (Admin)</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: var(--green);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--black);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--green);
+            color: #fff;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+        a{
+          color: rgb(0, 123, 255);
+          text-decoration: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <span>Total Unapproved Users: {{ total_unapproved_users }}</span>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Contact Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user_profile in unapproved_users %}
+          <tr>
+            <td><a href="{% url 'admin_dashboard' %}" data-toggle="tooltip" data-placement="top" title="Approve Now">{{ user_profile.user.username }}</a> </td>
+            <td>{{ user_profile.email }}</td>
+            <td>{{ user_profile.contact_number }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
+</div>
+
+</body>
+
+</html>
+
+{% endblock %}

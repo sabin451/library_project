@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculate Fines</title>
+</head>
+<body>
+    <h2>Calculate Fines</h2>
+
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Book Name</th>
+            <th>Rental Date</th>
+            <th>Return Date</th>
+            <th>Fine Amount</th>
+        </tr>
+        {% for entry in fines %}
+        <tr>
+            <td>{{ entry.rental.user.username }}</td>
+            <td>{{ entry.rental.book.name }}</td>
+            <td>{{ entry.rental.rental_date }}</td>
+            <td>{{ entry.rental.return_date }}</td>
+            <td>${{ entry.fine_amount|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

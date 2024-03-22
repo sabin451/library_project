@@ -1,0 +1,65 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+<style>
+  
+</style>
+  <div class="container">
+    <h2>Overdue Inform</h2>
+    
+    <div class="success-message">
+      <p>Fine charged!</p>
+    </div>
+    <div class="rental-info">
+      <p>Rental Information:</p>
+      <ul>
+        <li><strong>Book:</strong> {{ rental.book.name }}</li>
+        <li><strong>Rental Date:</strong> {{ rental.rental_date }}</li>
+        <li><strong>Return Date:</strong> {{ rental.return_date }}</li>
+        <li><strong>Fine Amount:</strong> ₹{{ rental.fine_amount }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <style>
+
+    .home-content {
+      background-image: url("{% static 'image/bg1.jpg' %}"); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .rental-info {
+      margin-bottom: 20px;
+    }
+
+    .rental-info ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .rental-info li {
+      margin-bottom: 10px;
+    }
+
+    .success-message {
+      background-color: #dff0d8;
+      border: 1px solid #d0e9c6;
+      color: #3c763d;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+
+  </style>
+{% endblock %}

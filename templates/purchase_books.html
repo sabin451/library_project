@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Books</title>
+</head>
+<body>
+    <h2>Purchase Books</h2>
+
+    <form method="post" action="{% url 'purchase_books' %}">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Book Name</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Quantity</th>
+            </tr>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.name }}</td>
+                <td>{{ book.author }}</td>
+                <td>${{ book.price|floatformat:2 }}</td>
+                <td>{{ book.stock }}</td>
+                <td>
+                    <input type="number" name="quantity" value="0" min="0" max="{{ book.stock }}">
+                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <input type="submit" value="Purchase Selected Books">
+    </form>
+
+    <a href="{% url 'browse_books' %}">Browse Books</a>
+
+
+    <br><br><br>
+    <a href="{% url 'home_u' %}" >Back to home</a>
+
+</body>
+</html>

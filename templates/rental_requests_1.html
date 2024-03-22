@@ -1,0 +1,110 @@
+{% extends 'nav_a.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #f7f7f7;
+        overflow: hidden;
+    }
+
+    h2 {
+        color: var(--green);
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    th, td {
+        border: 1px solid var(--black);
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: var(--green);
+        color: #fff;
+    }
+
+    @media (max-width: 768px) {
+        table {
+            width: 90%;
+        }
+        
+        th, td {
+            font-size: 14px; 
+        }
+    }
+
+    /* Styles for the "Pending" status */
+    td:not(.approved) {
+        color: red;
+    }
+
+    /* Styles for the "Approved" status */
+    td.approved {
+        color: green;
+    }
+
+    /* Styles for the "Approve" link */
+    a.approve-link {
+        color: white;
+        background-color: green;
+    }
+
+</style>
+
+<h2>Rental Requests</h2>
+
+{% if rental_requests %}
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Book</th>
+                <th>Request Date</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in rental_requests %}
+                <tr>
+                    <td>{{ request.user.username }}</td>
+                    <td>{{ request.book.name }}</td>
+                    <td>{{ request.request_date }}</td>
+                    <td style="color: blue;">{% if request.is_rental_request %}Rental{% else %}Return{% endif %}</td>
+                    <td class="{% if request.is_approved %}approved{% else %}pending{% endif %}">
+                        {% if request.is_approved %}
+                            Approved
+                        {% else %}
+                            Pending
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not request.is_approved %}
+                            <a href="{% url 'approve_rental_request' request.id %}" class="approve-link">Approve</a>
+                        {% else %}
+                            <a href=""><button disabled="disabled">Approve</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No rental requests available.</p>
+{% endif %}
+
+{% endblock %}
